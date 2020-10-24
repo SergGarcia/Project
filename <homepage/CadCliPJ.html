@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+	<script>
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+            
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+        
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+           
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+
+	</script>
+</head>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+.btn {
+  background-color: navy;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: green;
+}
+
+input[type=text], select, textarea {
+  width: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  resize: vertical;
+}
+
+label {
+  padding: 10px 10px 10px 0;
+  display: inline-block;
+	font-size: 12px;
+}
+
+input[type=reset] {
+  background-color: #4CAF50;
+  color: red;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: left;
+}
+
+input[type=reset]:hover {
+  background-color: navy;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: black;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: left;
+}
+
+input[type=submit]:hover {
+  background-color: navy;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+</style>
+
+<body>
+<a href = "index.html" button class="btn"> <i class="fa fa-home"> </i> </button> </a>
+<h2>Cadastro Cliente Pessoa Juridica</h2>
+	<form method="get" action=".">
+
+		<label>Razão Social:
+      <input name="rsocial" type="text" id="razaosocial" size="60" /></label><br />
+		
+		<label>Nome Fantasia:
+      <input name="nfantasia" type="text" id="nomefantasia" size="60" /></label><br />
+			
+		<label>CNPJ:
+      <input name="cnpj" type="text" id="cnpj" size="20" onkeypress="$
+				(this).mask('99.999.999/9999-99')" /></label><br />	
+			
+		<label>E-mail:
+			<input name="email" type="text" id="email" size="60" /></label><br />	
+			
+		<label>Celular:
+			<input name="celular" type="text" id="celular" size="20" onkeypress="$(this).mask('(00)00000-0000');" /></label><br />	
+			
+		<label>Telefone:
+			<input name="telefone" type="text" id="telefone" size="20" onkeypress="$(this).mask('(00)0000-0000');" /></label><br />	
+			
+		<label>Cep:
+      <input name="cep" type="text" id="cep" value="" size="15" maxlength="9"
+			onblur="pesquisacep(this.value);" /></label><br />
+     
+		<label>Rua:
+			<input name="rua" type="text" id="rua" size="60" /></label><br />
+      
+		<label>Complemento:
+      <input name="complemento" type="text" id="complemento" size="40" /></label><br />
+		
+		<label>Bairro:
+      <input name="bairro" type="text" id="bairro" size="40" /></label><br />
+     
+		<label>Cidade:
+      <input name="cidade" type="text" id="cidade"size="40" /></label><br />
+    
+		<label>Estado:
+      <input name="uf" type="text" id="uf" size="2" /></label><br />
+
+	<div class="row">
+    	<input type="reset" value="Apagar formulário" />
+	</div>
+	<div class="row">
+   		<input type="submit" value="Enviar formulário" />
+	</div>
+ </form>
+</body>
+</html>
+
