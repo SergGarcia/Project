@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+	<script>
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+            
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+        
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+           
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+
+	</script>
+</head>
+
+<style>
+
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+h2{
+  text-align: center;
+}
+</style>
+
+<body>
+
+  
+  <nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href=index.html><i class="fa fa-home"></i>Home</a>
+  </nav>
+
+  <hr>
+<h2>Cadastro Cliente </h2>
+	<!-- <form method="get" action=".">
+
+		<label>Razão Social:
+      <input name="rsocial" type="text" id="razaosocial" size="60" /></label><br />
+		
+		<label>Nome Fantasia:
+      <input name="nfantasia" type="text" id="nomefantasia" size="60" /></label><br />
+			
+		<label>CNPJ:
+      <input name="cnpj" type="text" id="cnpj" size="20" onkeypress="$
+				(this).mask('99.999.999/9999-99')" /></label><br />	
+			
+		<label>E-mail:
+			<input name="email" type="text" id="email" size="60" /></label><br />	
+			
+		<label>Celular:
+			<input name="celular" type="text" id="celular" size="20" onkeypress="$(this).mask('(00)00000-0000');" /></label><br />	
+			
+		<label>Telefone:
+			<input name="telefone" type="text" id="telefone" size="20" onkeypress="$(this).mask('(00)0000-0000');" /></label><br />	
+			
+		<label>Cep:
+      <input name="cep" type="text" id="cep" value="" size="15" maxlength="9"
+			onblur="pesquisacep(this.value);" /></label><br />
+     
+		<label>Rua:
+			<input name="rua" type="text" id="rua" size="60" /></label><br />
+      
+		<label>Complemento:
+      <input name="complemento" type="text" id="complemento" size="40" /></label><br />
+		
+		<label>Bairro:
+      <input name="bairro" type="text" id="bairro" size="40" /></label><br />
+     
+		<label>Cidade:
+      <input name="cidade" type="text" id="cidade"size="40" /></label><br />
+    
+		<label>Estado:
+      <input name="uf" type="text" id="uf" size="2" /></label><br />
+
+	<div class="row">
+    	<input type="reset" value="Apagar formulário" />
+	</div>
+	<div class="row">
+   		<input type="submit" value="Enviar formulário" />
+	</div>
+ </form> -->
+
+<div class="container">
+
+  <div class="card text-center shadowCard">
+    <div class="card-header">
+      Formulário
+    </div>
+    <div class="card-body">
+ <form method="get" action=".">
+
+  <div class="row">
+  <div class="col">
+    <div class="form-group">
+    <label for="razaosocial">Razão Social</label>
+     <input name="rsocial" class="form-control"  
+     type="text" id="razaosocial" size="60" />
+  </div>
+</div>
+
+<div class="col">
+  <div class="form-group">
+    <label for="nomefantasia">Nome Fantasia</label>
+     <input name="nfantasia" class="form-control" 
+     type="text" id="nomefantasia" size="60" />
+  </div>
+  </div>
+</div>
+
+<div class="row">
+<div class="col">
+  <div class="form-group">
+    <label for="cnpj">CNP/CNPJ</label>
+     <input name="cnpj" class="form-control" 
+     type="text" id="cnpj" size="20" onkeypress="$
+     (this).mask('99.999.999/9999-99')" />
+  </div>
+</div>
+
+  <div class="col">
+  <div class="form-group">
+    <label for="email">E-mail</label>
+     <input name="email" class="form-control" 
+     type="email" id="email" size="50"  />
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col">
+  <div class="form-group">
+    <label for="telefone">Telefone</label>
+     <input name="telefone" class="form-control" 
+     type="text" id="telefone" size="20" oonkeypress="$(this).mask('(00)0000-0000');"  />
+  </div>
+</div>
+
+  <div class="col">
+    <div class="form-group">
+      <label for="celular">Celular</label>
+       <input name="celular" class="form-control" 
+       type="text" id="celular" size="20" onkeypress="$(this).mask('(00)00000-0000');" />
+    </div>
+  </div>
+</div>
+
+<div class="row">
+<div class="col">
+  <div class="form-group">
+    <label for="cep">Cep</label>
+     <input name="cep" class="form-control" 
+     type="text" id="cep" value="" size="15" maxlength="9"
+     onblur="pesquisacep(this.value);" />
+  </div>
+</div>
+  
+<div class="col">
+  <div class="form-group">
+    <label for="rua">Rua</label>
+     <input name="rua" class="form-control" 
+     type="text" id="rua" value="" size="60"  />
+  </div>
+</div>
+
+<div class="col">
+  <div class="form-group">
+    <label for="complemento">Complemento</label>
+     <input name="complemento" class="form-control" 
+     type="text" id="complemento" value="" size="40"  />
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col">
+  <div class="form-group">
+    <label for="bairro">Bairro</label>
+     <input name="bairro" class="form-control" 
+     type="text" id="bairro" value="" size="40"  />
+  </div>
+</div>
+
+<div class="col">
+  <div class="form-group">
+    <label for="cidade">Cidade</label>
+     <input name="cidade" class="form-control" 
+     type="text" id="cidade" value="" size="40"  />
+  </div>
+</div>
+
+<div class="col">
+  <div class="form-group">
+    <label for="uf">Estado</label>
+     <input name="uf" class="form-control" 
+     type="text" id="uf" value="" size="2"  />
+  </div>
+</div>
+</div>
+
+  <button type="submit" class="btn btn-primary">Cadastrar</button>
+  <button type="reset" class="btn btn-primary">Limpar</button>
+
+</form>
+</div>
+</div>
+</div>
+
+</body>
+</html>
+
